@@ -1,0 +1,37 @@
+<!-- loginHistory.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login History</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <%- include('navbar') %> <!-- Include the Navbar here -->
+  
+  <div class="container mt-4">
+    <!-- Table for Login History -->
+    <div>
+      <h3 style="color: blue;">Login History</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Login Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through your login history data -->
+          <% loginHistory.forEach(log => { %>
+            <tr>
+              <td><%= log.username %></td>
+              <td><%= log.loginDate %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!-- dashboard.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/styles.css"> <!-- Link your external CSS file -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Centered Dashboard title -->
+    <h1 class="text-center" style="color: orange;">Dashboard</h1>
+
+    <!-- Centered image -->
+    <div class="text-center">
+      <img src="C:\uni\Semester 9\Web Devlopment\Omar Ezzat 19106505\WhatsApp Image 2023-09-29 at 03.49.42.jpg" alt="Dashboard Image" class="img-fluid" style="width: 300px;">
+    </div>
+
+    <!-- Add Department section -->
+    <div>
+      <h3 style="color: blue;">Add Department</h3>
+      <!-- Bootstrap form for adding department -->
+      <form id="addDepartmentForm">
+        <div class="form-group">
+          <input type="number" class="form-control" name="id" placeholder="Department ID">
+          <input type="text" class="form-control" name="Name" placeholder="Department Name">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Department</button>
+      </form>
+    </div>
+
+    <!-- Add User section -->
+    <div>
+      <h3 style="color: blue;">Add User</h3>
+      <!-- Bootstrap form for adding user -->
+      <form id="addUserForm">
+        <div class="form-group">
+          <input type="text" class="form-control" name="username" placeholder="Username">
+          <input type="password" class="form-control" name="password" placeholder="Password">
+          <input type="text" class="form-control" name="departmentID" placeholder="Department ID">
+        </div>
+        <button type="submit" class="btn btn-primary">Add User</button>
+      </form>
+    </div>
+
+    <!-- Table of current users -->
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h3 style="color: blue;">Current Users</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Username</th>
+              <th scope="col">Password</th>
+              <th scope="col">Department</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTable">
+          </tbody>
+        </table>const app = express();
+      </div>
+
+      <!-- Table of all departments -->
+      <div class="col-md-6">
+        <h3 style="color: blue;">All Departments</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Department ID</th>
+              <th scope="col">Department Name</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="departmentTable">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // AJAX call for adding department
+    $('#addDepartmentForm').submit(function(event) {
+      event.preventDefault();
+      var formData = {
+      id: $('#id').val(),
+      Name: $('#Name').val(),
+  };
+      $.ajax({
+        url: '/api/adddepartment',
+        method: 'POST',
+        data: formData,
+        success: function(response) {
+            $("tbody").append(`
+      <tr>
+          <td>${response.id}</td>
+          <td>${response.Name}</td>
+          <td>${response.Action}</td>
+      </tr>
+  `)
+        },
+        error: function() {
+          alert('Error happened. Please try again later.');
+        }
+      });
+    });
+
+    // AJAX call for adding user
+    $('#addUserForm').submit(function(event) {
+      event.preventDefault();
+      var formData = {
+      username: $('#username').val(),
+      password: $('#password').val(),
+      departmenID: $('#departmentID').val(),
+  };
+      $.ajax({
+        url: '/api/adduser',
+        method: 'POST',
+        data: formData,
+        success: function(response) {
+            $("tbody").append(`
+      <tr>
+          <td>${response.ID}</td>
+          <td>${response.username}</td>
+          <td>${response.password}</td>
+          <td>${response.departmenID}</td>
+      </tr>
+  `)
+        },
+        error: function() {
+          alert('Error happened. Please try again later.');
+        }
+      });
+    });
+//make ajax for logging out
+$('#signOutBtn').click(function(){
+    $.ajax({
+        url: '/api/logout',
+        method: 'GET',
+        success: function(response) {
+            window.location.href = '/login';
+        },
+        error: function() {
+          alert('Error happened. Please try again later.');
+        }
+      });
+})
+    // AJAX call for deleting user
+    $('.deleteUserBtn').click(function() {
+      // AJAX call to '/api/deleteuser' and handle success/failure
+      let idToDelete = $(this).data("id");
+        $.ajax({
+            url: '/api/deleteuser',
+            method: 'POST',
+            data: {id: idToDelete},
+            success: function(response) {
+                $(`#userTable tr[data-id=${idToDelete}]`).remove();
+            },
+            error: function() {
+            alert('Error happened. Please try again later.');
+            }
+        });
+    });
+  </script>
+</body>
+</html>
